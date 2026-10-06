@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme for Dark mode. -->
+    <style name="Base.Theme.RentMate" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="colorOnPrimary">@color/black</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/emerald</item>
+        <item name="colorSecondaryVariant">@color/emerald</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Background and Surface colors. -->
+        <item name="android:colorBackground">@color/black</item>
+        <item name="colorSurface">@color/charcoal</item>
+        <item name="colorOnBackground">@color/light_gray</item>
+        <item name="colorOnSurface">@color/light_gray</item>
+
+        <!-- Error color. -->
+        <item name="colorError">@color/coral</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
+</resources>
