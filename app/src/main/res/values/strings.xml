@@ -11,6 +11,48 @@
     <string name="save">Save</string>
     <string name="loading">Loading...</string>
 
+    <!-- Auth / Welcome Screen -->
+    <string name="welcome_heading">Your next home starts here.</string>
+    <string name="welcome_description">Find a place you love, meet people you\'ll vibe with, and make shared living easier.</string>
+    <string name="get_started">Get Started</string>
+    <string name="already_have_account">I already have an account</string>
+    <string name="welcome_footer">Made for better shared living.</string>
+
+    <!-- Auth / Login Screen -->
+    <string name="welcome_back">Welcome back</string>
+    <string name="login_subtitle">Log in to continue your RentMate journey.</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="forgot_password_question">Forgot Password?</string>
+    <string name="log_in">Log In</string>
+    <string name="or">OR</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="dont_have_account">Don\'t have an account? Sign up</string>
+
+    <!-- Auth / Signup Screen -->
+    <string name="create_account_heading">Create your account</string>
+    <string name="signup_subtitle">Start finding your place and your people.</string>
+    <string name="full_name">Full Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="agree_terms">I agree to the Terms of Service and Privacy Policy.</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_have_account_login">Already have an account? Log in</string>
+
+    <!-- Auth / Forgot Password Screen -->
+    <string name="forgot_password_heading">Forgot your password?</string>
+    <string name="forgot_password_desc">Don\'t worry. Enter the email address linked to your account and we\'ll help you reset your password.</string>
+    <string name="send_reset_link">Send Reset Link</string>
+    <string name="back_to_login">Back to Login</string>
+
+    <!-- Auth / Error Messages -->
+    <string name="error_required">This field is required</string>
+    <string name="error_invalid_email">Enter a valid email address</string>
+    <string name="error_invalid_phone">Enter a valid phone number</string>
+    <string name="error_password_length">Password must be at least 8 characters</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_terms">You must agree to the terms</string>
+
     <!-- Home Cards -->
     <string name="find_rentals">Find Rentals</string>
     <string name="find_rentals_desc">Browse apartments and houses</string>
@@ -23,6 +65,9 @@
     <string name="cd_search">Search</string>
     <string name="cd_people">People</string>
     <string name="cd_receipt">Receipt</string>
+    <string name="cd_google">Google</string>
+    <string name="cd_illustration">Illustration</string>
+    <string name="cd_logo">RentMate Logo</string>
 
     <!-- Auth Placeholder -->
     <string name="sign_in">Sign In</string>

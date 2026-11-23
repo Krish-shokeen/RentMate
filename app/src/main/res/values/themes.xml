@@ -46,5 +46,34 @@
         <item name="android:minHeight">@dimen/button_height</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.RentMate.Button</item>
+    </style>
+
+    <style name="Widget.RentMate.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="cornerRadius">@dimen/corner_radius_medium</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="strokeColor">@color/slate</item>
+        <item name="android:textColor">@color/dark_navy</item>
+        <item name="android:textAppearance">@style/TextAppearance.RentMate.Button</item>
+    </style>
+
+    <style name="Widget.RentMate.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/corner_radius_small</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/corner_radius_small</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/corner_radius_small</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/corner_radius_small</item>
+        <item name="boxStrokeColor">@color/primary</item>
+        <item name="hintTextColor">@color/primary</item>
+    </style>
+
+    <style name="TextAppearance.RentMate.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
     </style>
 </resources>
