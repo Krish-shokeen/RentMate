@@ -14,8 +14,8 @@
         <!-- Background and Surface colors. -->
         <item name="android:colorBackground">@color/background</item>
         <item name="colorSurface">@color/white</item>
-        <item name="colorOnBackground">@color/charcoal</item>
-        <item name="colorOnSurface">@color/charcoal</item>
+        <item name="colorOnBackground">@color/dark_navy</item>
+        <item name="colorOnSurface">@color/dark_navy</item>
 
         <!-- Error color. -->
         <item name="colorError">@color/coral</item>
@@ -23,7 +23,28 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+
+        <!-- Component Styles -->
+        <item name="materialCardViewStyle">@style/Widget.RentMate.CardView</item>
+        <item name="materialButtonStyle">@style/Widget.RentMate.Button</item>
     </style>
 
     <style name="Theme.RentMate" parent="Base.Theme.RentMate" />
+
+    <!-- Widget Styles -->
+    <style name="Widget.RentMate.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">@dimen/corner_radius_large</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.RentMate.Button" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">@dimen/corner_radius_medium</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
 </resources>
