@@ -12,6 +12,8 @@ navigation = "2.8.5"
 googleServices = "4.4.2"
 firebaseBom = "33.8.0"
 glide = "4.16.0"
+playServicesMaps = "19.0.0"
+playServicesLocation = "21.3.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -34,6 +36,10 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 
 # Glide Image Loading
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+
+# Google Maps & Location
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -69,6 +69,17 @@
     <string name="nav_expenses">Expenses</string>
     <string name="nav_profile">Profile</string>
 
+    <!-- Google Maps API Key Placeholder -->
+    <string name="google_maps_key" translatable="false">YOUR_GOOGLE_MAPS_API_KEY_HERE</string>
+
+    <!-- Location & Maps -->
+    <string name="location_permission_needed">Location access is required to discover nearby rental properties and show them on the map.</string>
+    <string name="location_disabled_msg">Device location services are disabled. Please enable GPS in settings.</string>
+    <string name="map_view">Map</string>
+    <string name="list_view">List</string>
+    <string name="open_in_google_maps">Open in Google Maps</string>
+    <string name="get_directions">Get Directions</string>
+
     <!-- Content Descriptions -->
     <string name="cd_search">Search</string>
     <string name="cd_people">People</string>

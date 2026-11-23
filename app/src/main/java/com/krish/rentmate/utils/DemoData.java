@@ -18,7 +18,7 @@ public class DemoData {
     public static List<Property> getProperties() {
         if (properties == null) {
             properties = new ArrayList<>();
-            properties.add(new Property(
+            Property p1 = new Property(
                     "p1",
                     "Modern Studio near Gurgaon",
                     "Sector 56, Gurugram",
@@ -31,9 +31,12 @@ public class DemoData {
                     "Wi-Fi, AC, Power Backup, Gym, Kitchenette, Security",
                     false,
                     R.drawable.ic_property_placeholder1
-            ));
+            );
+            p1.setLatitude(28.4232);
+            p1.setLongitude(77.0984);
+            properties.add(p1);
 
-            properties.add(new Property(
+            Property p2 = new Property(
                     "p2",
                     "Student-friendly shared apartment",
                     "Sector 62, Gurugram",
@@ -46,9 +49,12 @@ public class DemoData {
                     "Wi-Fi, Washing Machine, Balcony, Elevator, RO Water",
                     false,
                     R.drawable.ic_property_placeholder2
-            ));
+            );
+            p2.setLatitude(28.4069);
+            p2.setLongitude(77.0963);
+            properties.add(p2);
 
-            properties.add(new Property(
+            Property p3 = new Property(
                     "p3",
                     "Cozy private room",
                     "Sohna Road, Gurugram",
@@ -61,9 +67,12 @@ public class DemoData {
                     "AC, Housekeeping, TV, Parking, Gated Community",
                     false,
                     R.drawable.ic_property_placeholder3
-            ));
+            );
+            p3.setLatitude(28.3846);
+            p3.setLongitude(77.0428);
+            properties.add(p3);
 
-            properties.add(new Property(
+            Property p4 = new Property(
                     "p4",
                     "Luxury 2BHK Student Residency",
                     "DLF Phase 3, Gurugram",
@@ -76,9 +85,12 @@ public class DemoData {
                     "Modular Kitchen, Rooftop Lounge, Wi-Fi, 24/7 Power, Elevator",
                     false,
                     R.drawable.ic_property_placeholder4
-            ));
+            );
+            p4.setLatitude(28.4907);
+            p4.setLongitude(77.0898);
+            properties.add(p4);
 
-            properties.add(new Property(
+            Property p5 = new Property(
                     "p5",
                     "Affordable PG for Boys/Girls",
                     "Sector 43, Gurugram",
@@ -91,7 +103,10 @@ public class DemoData {
                     "Meals Included, Wi-Fi, Laundry, CCTV, Study Desk",
                     false,
                     R.drawable.ic_property_placeholder5
-            ));
+            );
+            p5.setLatitude(28.4552);
+            p5.setLongitude(77.0851);
+            properties.add(p5);
         }
         return properties;
     }
