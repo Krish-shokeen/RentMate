@@ -11,12 +11,16 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.krish.rentmate.R;
+import com.krish.rentmate.models.User;
+import com.krish.rentmate.repositories.AuthRepository;
+import com.krish.rentmate.repositories.RepositoryCallback;
 import com.krish.rentmate.utils.ValidationUtils;
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputLayout tilEmail, tilPassword;
     private TextInputEditText etEmail, etPassword;
+    private MaterialButton btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         
-        MaterialButton btnLogin = findViewById(R.id.btnLogin);
+        btnLogin = findViewById(R.id.btnLogin);
         MaterialButton btnGoogleLogin = findViewById(R.id.btnGoogleLogin);
         TextView tvForgotPassword = findViewById(R.id.tvForgotPassword);
         TextView tvSignup = findViewById(R.id.tvSignup);
@@ -36,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> validateAndLogin());
 
         btnGoogleLogin.setOnClickListener(v -> 
-            Snackbar.make(v, "Google authentication will be implemented later.", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(v, "Google Sign-In requires SHA-1 configuration in Firebase Console.", Snackbar.LENGTH_LONG).show()
         );
 
         tvForgotPassword.setOnClickListener(v -> {
@@ -72,7 +76,28 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (isValid) {
-            Snackbar.make(tilEmail, "Authentication will be connected in next phase", Snackbar.LENGTH_LONG).show();
+            setLoading(true);
+            AuthRepository.getInstance().login(email, password, new RepositoryCallback<User>() {
+                @Override
+                public void onSuccess(User user) {
+                    setLoading(false);
+                    Intent intent = new Intent(LoginActivity.this, MainDashboardActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    setLoading(false);
+                    Snackbar.make(btnLogin, errorMessage, Snackbar.LENGTH_LONG).show();
+                }
+            });
         }
+    }
+
+    private void setLoading(boolean isLoading) {
+        btnLogin.setEnabled(!isLoading);
+        btnLogin.setText(isLoading ? "Signing in..." : getString(R.string.log_in));
     }
 }

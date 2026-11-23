@@ -10,12 +10,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.krish.rentmate.R;
+import com.krish.rentmate.repositories.AuthRepository;
+import com.krish.rentmate.repositories.RepositoryCallback;
 import com.krish.rentmate.utils.ValidationUtils;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     private TextInputLayout tilEmail;
     private TextInputEditText etEmail;
+    private MaterialButton btnResetPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +28,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         tilEmail = findViewById(R.id.tilEmail);
         etEmail = findViewById(R.id.etEmail);
         
-        MaterialButton btnResetPassword = findViewById(R.id.btnResetPassword);
+        btnResetPassword = findViewById(R.id.btnResetPassword);
         TextView tvBackToLogin = findViewById(R.id.tvBackToLogin);
 
         btnResetPassword.setOnClickListener(v -> validateAndSendReset());
@@ -48,7 +51,25 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         }
 
         if (isValid) {
-            Snackbar.make(tilEmail, "Password reset functionality will be connected with Firebase in a later phase.", Snackbar.LENGTH_LONG).show();
+            setLoading(true);
+            AuthRepository.getInstance().resetPassword(email, new RepositoryCallback<Void>() {
+                @Override
+                public void onSuccess(Void result) {
+                    setLoading(false);
+                    Snackbar.make(btnResetPassword, "Password reset email sent! Check your inbox.", Snackbar.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    setLoading(false);
+                    Snackbar.make(btnResetPassword, errorMessage, Snackbar.LENGTH_LONG).show();
+                }
+            });
         }
+    }
+
+    private void setLoading(boolean isLoading) {
+        btnResetPassword.setEnabled(!isLoading);
+        btnResetPassword.setText(isLoading ? "Sending..." : getString(R.string.send_reset_link));
     }
 }

@@ -21,7 +21,9 @@ import com.krish.rentmate.R;
 import com.krish.rentmate.activities.RoommateDetailsActivity;
 import com.krish.rentmate.adapters.RoommateAdapter;
 import com.krish.rentmate.models.Roommate;
-import com.krish.rentmate.utils.DemoData;
+import com.krish.rentmate.repositories.AuthRepository;
+import com.krish.rentmate.repositories.RepositoryCallback;
+import com.krish.rentmate.repositories.RoommateRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +41,8 @@ public class RoommatesFragment extends Fragment implements RoommateAdapter.OnRoo
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_roommates, container, false);
 
-        allRoommates = DemoData.getRoommates();
-        filteredRoommates = new ArrayList<>(allRoommates);
+        allRoommates = new ArrayList<>();
+        filteredRoommates = new ArrayList<>();
 
         TextInputEditText etSearch = view.findViewById(R.id.etSearchRoommates);
         tvCount = view.findViewById(R.id.tvCount);
@@ -49,6 +51,8 @@ public class RoommatesFragment extends Fragment implements RoommateAdapter.OnRoo
         rvRoommates.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new RoommateAdapter(filteredRoommates, this);
         rvRoommates.setAdapter(adapter);
+
+        loadRoommates(etSearch);
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -63,8 +67,22 @@ public class RoommatesFragment extends Fragment implements RoommateAdapter.OnRoo
             public void afterTextChanged(Editable s) {}
         });
 
-        updateCount();
         return view;
+    }
+
+    private void loadRoommates(TextInputEditText etSearch) {
+        RoommateRepository.getInstance().getRoommates(new RepositoryCallback<List<Roommate>>() {
+            @Override
+            public void onSuccess(List<Roommate> result) {
+                allRoommates = result != null ? result : new ArrayList<>();
+                filter(etSearch.getText() != null ? etSearch.getText().toString() : "");
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                updateCount();
+            }
+        });
     }
 
     private void filter(String query) {
@@ -72,7 +90,8 @@ public class RoommatesFragment extends Fragment implements RoommateAdapter.OnRoo
         String q = query.toLowerCase().trim();
 
         for (Roommate r : allRoommates) {
-            if (q.isEmpty() || r.getName().toLowerCase().contains(q) || r.getLocation().toLowerCase().contains(q)) {
+            if (q.isEmpty() || (r.getName() != null && r.getName().toLowerCase().contains(q)) || 
+                (r.getLocation() != null && r.getLocation().toLowerCase().contains(q))) {
                 filteredRoommates.add(r);
             }
         }
@@ -97,8 +116,27 @@ public class RoommatesFragment extends Fragment implements RoommateAdapter.OnRoo
     public void onConnectClick(Roommate roommate, int position) {
         roommate.setConnected(true);
         adapter.notifyItemChanged(position);
-        if (getView() != null) {
-            Snackbar.make(getView(), "Connection request sent to " + roommate.getName() + "!", Snackbar.LENGTH_SHORT).show();
-        }
+
+        String currentUid = AuthRepository.getInstance().isUserAuthenticated() ? 
+                AuthRepository.getInstance().getCurrentUser().getUid() : "guest";
+        String currentName = AuthRepository.getInstance().isUserAuthenticated() && 
+                AuthRepository.getInstance().getCurrentUser().getDisplayName() != null ? 
+                AuthRepository.getInstance().getCurrentUser().getDisplayName() : "Krish";
+
+        RoommateRepository.getInstance().sendConnectionRequest(currentUid, currentName, roommate.getUid(), new RepositoryCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                if (getView() != null) {
+                    Snackbar.make(getView(), "Connection request sent to " + roommate.getName() + "!", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                if (getView() != null) {
+                    Snackbar.make(getView(), errorMessage, Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

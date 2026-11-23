@@ -11,17 +11,18 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.krish.rentmate.R;
 import com.krish.rentmate.models.Expense;
-import com.krish.rentmate.utils.DemoData;
+import com.krish.rentmate.repositories.AuthRepository;
+import com.krish.rentmate.repositories.ExpenseRepository;
+import com.krish.rentmate.repositories.RepositoryCallback;
 import com.krish.rentmate.utils.ValidationUtils;
 
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 import java.util.Locale;
 
 public class AddExpenseActivity extends AppCompatActivity {
 
-    private TextInputLayout tilExpenseTitle, tilExpenseAmount, tilExpenseCategory, tilPaidBy;
+    private TextInputLayout tilExpenseTitle, tilExpenseAmount;
     private TextInputEditText etExpenseTitle, etExpenseAmount, etExpenseCategory, etPaidBy;
 
     @Override
@@ -34,8 +35,6 @@ public class AddExpenseActivity extends AppCompatActivity {
 
         tilExpenseTitle = findViewById(R.id.tilExpenseTitle);
         tilExpenseAmount = findViewById(R.id.tilExpenseAmount);
-        tilExpenseCategory = findViewById(R.id.tilExpenseCategory);
-        tilPaidBy = findViewById(R.id.tilPaidBy);
 
         etExpenseTitle = findViewById(R.id.etExpenseTitle);
         etExpenseAmount = findViewById(R.id.etExpenseAmount);
@@ -89,6 +88,9 @@ public class AddExpenseActivity extends AppCompatActivity {
             else if (category.toLowerCase().contains("wifi") || category.toLowerCase().contains("net")) iconRes = R.drawable.ic_wifi;
             else if (category.toLowerCase().contains("groc") || category.toLowerCase().contains("food")) iconRes = R.drawable.ic_shopping_cart;
 
+            String currentUid = AuthRepository.getInstance().isUserAuthenticated() ? 
+                    AuthRepository.getInstance().getCurrentUser().getUid() : "guest";
+
             Expense newExpense = new Expense(
                     "e_" + System.currentTimeMillis(),
                     title,
@@ -100,10 +102,21 @@ public class AddExpenseActivity extends AppCompatActivity {
                     "Split (3 people)",
                     iconRes
             );
+            newExpense.setCreatedBy(currentUid);
 
-            DemoData.addExpense(newExpense);
-            Snackbar.make(tilExpenseTitle, "Expense saved successfully!", Snackbar.LENGTH_SHORT).show();
-            finish();
+            ExpenseRepository.getInstance().addExpense(newExpense, new RepositoryCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Snackbar.make(tilExpenseTitle, "Expense saved successfully!", Snackbar.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    Snackbar.make(tilExpenseTitle, "Saved locally.", Snackbar.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
         }
     }
 }

@@ -17,8 +17,10 @@ import com.krish.rentmate.R;
 import com.krish.rentmate.activities.AddExpenseActivity;
 import com.krish.rentmate.adapters.ExpenseAdapter;
 import com.krish.rentmate.models.Expense;
-import com.krish.rentmate.utils.DemoData;
+import com.krish.rentmate.repositories.ExpenseRepository;
+import com.krish.rentmate.repositories.RepositoryCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExpensesFragment extends Fragment {
@@ -31,7 +33,7 @@ public class ExpensesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_expenses, container, false);
 
-        expenseList = DemoData.getExpenses();
+        expenseList = new ArrayList<>();
 
         MaterialButton btnAddExpense = view.findViewById(R.id.btnAddExpense);
         RecyclerView rvExpenses = view.findViewById(R.id.rvExpenses);
@@ -45,14 +47,29 @@ public class ExpensesFragment extends Fragment {
             startActivity(intent);
         });
 
+        loadExpenses();
+
         return view;
+    }
+
+    private void loadExpenses() {
+        ExpenseRepository.getInstance().getExpenses(new RepositoryCallback<List<Expense>>() {
+            @Override
+            public void onSuccess(List<Expense> result) {
+                if (result != null) {
+                    expenseList = result;
+                    adapter.updateList(expenseList);
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {}
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (adapter != null) {
-            adapter.updateList(DemoData.getExpenses());
-        }
+        loadExpenses();
     }
 }

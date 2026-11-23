@@ -2,6 +2,7 @@ package com.krish.rentmate.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -12,6 +13,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.krish.rentmate.R;
+import com.krish.rentmate.models.User;
+import com.krish.rentmate.repositories.AuthRepository;
+import com.krish.rentmate.repositories.RepositoryCallback;
 import com.krish.rentmate.utils.ValidationUtils;
 
 public class SignupActivity extends AppCompatActivity {
@@ -19,6 +23,7 @@ public class SignupActivity extends AppCompatActivity {
     private TextInputLayout tilName, tilEmail, tilPhone, tilPassword, tilConfirmPassword;
     private TextInputEditText etName, etEmail, etPhone, etPassword, etConfirmPassword;
     private CheckBox cbTerms;
+    private MaterialButton btnSignup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +43,14 @@ public class SignupActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         cbTerms = findViewById(R.id.cbTerms);
 
-        MaterialButton btnSignup = findViewById(R.id.btnSignup);
+        btnSignup = findViewById(R.id.btnSignup);
         MaterialButton btnGoogleSignup = findViewById(R.id.btnGoogleSignup);
         TextView tvLogin = findViewById(R.id.tvLogin);
 
         btnSignup.setOnClickListener(v -> validateAndSignup());
 
         btnGoogleSignup.setOnClickListener(v ->
-            Snackbar.make(v, "Google authentication will be implemented later.", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(v, "Google Sign-In requires SHA-1 configuration in Firebase Console.", Snackbar.LENGTH_LONG).show()
         );
 
         tvLogin.setOnClickListener(v -> {
@@ -112,7 +117,28 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         if (isValid) {
-            Snackbar.make(tilEmail, "Registration validation successful, account creation next phase", Snackbar.LENGTH_LONG).show();
+            setLoading(true);
+            AuthRepository.getInstance().register(name, email, phone, password, new RepositoryCallback<User>() {
+                @Override
+                public void onSuccess(User user) {
+                    setLoading(false);
+                    Intent intent = new Intent(SignupActivity.this, MainDashboardActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    setLoading(false);
+                    Snackbar.make(btnSignup, errorMessage, Snackbar.LENGTH_LONG).show();
+                }
+            });
         }
+    }
+
+    private void setLoading(boolean isLoading) {
+        btnSignup.setEnabled(!isLoading);
+        btnSignup.setText(isLoading ? "Creating account..." : getString(R.string.create_account));
     }
 }

@@ -24,7 +24,9 @@ import com.krish.rentmate.R;
 import com.krish.rentmate.activities.PropertyDetailsActivity;
 import com.krish.rentmate.adapters.PropertyAdapter;
 import com.krish.rentmate.models.Property;
-import com.krish.rentmate.utils.DemoData;
+import com.krish.rentmate.repositories.AuthRepository;
+import com.krish.rentmate.repositories.PropertyRepository;
+import com.krish.rentmate.repositories.RepositoryCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,8 +48,8 @@ public class ExploreFragment extends Fragment implements PropertyAdapter.OnPrope
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
-        allProperties = DemoData.getProperties();
-        filteredProperties = new ArrayList<>(allProperties);
+        allProperties = new ArrayList<>();
+        filteredProperties = new ArrayList<>();
 
         TextInputEditText etSearch = view.findViewById(R.id.etSearch);
         MaterialCardView btnFilter = view.findViewById(R.id.btnFilter);
@@ -59,6 +61,9 @@ public class ExploreFragment extends Fragment implements PropertyAdapter.OnPrope
         rvProperties.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new PropertyAdapter(filteredProperties, this);
         rvProperties.setAdapter(adapter);
+
+        // Fetch properties from Firestore or Demo fallback
+        loadPropertiesFromRepository(etSearch);
 
         // Search text watcher
         etSearch.addTextChangedListener(new TextWatcher() {
@@ -91,8 +96,22 @@ public class ExploreFragment extends Fragment implements PropertyAdapter.OnPrope
         // Sort options
         tvSort.setOnClickListener(v -> showSortDialog());
 
-        updateResultCount();
         return view;
+    }
+
+    private void loadPropertiesFromRepository(TextInputEditText etSearch) {
+        PropertyRepository.getInstance().getProperties(new RepositoryCallback<List<Property>>() {
+            @Override
+            public void onSuccess(List<Property> result) {
+                allProperties = result != null ? result : new ArrayList<>();
+                applyFilters(etSearch.getText() != null ? etSearch.getText().toString() : "");
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                updateResultCount();
+            }
+        });
     }
 
     private void applyFilters(String searchQuery) {
@@ -101,10 +120,10 @@ public class ExploreFragment extends Fragment implements PropertyAdapter.OnPrope
 
         for (Property p : allProperties) {
             boolean matchesCategory = currentCategory.equals("All") || 
-                    p.getType().toLowerCase().contains(currentCategory.toLowerCase());
+                    (p.getType() != null && p.getType().toLowerCase().contains(currentCategory.toLowerCase()));
             boolean matchesSearch = query.isEmpty() || 
-                    p.getTitle().toLowerCase().contains(query) || 
-                    p.getLocation().toLowerCase().contains(query);
+                    (p.getTitle() != null && p.getTitle().toLowerCase().contains(query)) || 
+                    (p.getLocation() != null && p.getLocation().toLowerCase().contains(query));
             boolean matchesBudget = p.getRent() <= maxBudget;
 
             if (matchesCategory && matchesSearch && matchesBudget) {
@@ -181,6 +200,15 @@ public class ExploreFragment extends Fragment implements PropertyAdapter.OnPrope
 
     @Override
     public void onFavoriteClick(Property property, int position) {
-        // Handled locally
+        if (AuthRepository.getInstance().isUserAuthenticated()) {
+            String uid = AuthRepository.getInstance().getCurrentUser().getUid();
+            PropertyRepository.getInstance().toggleFavorite(uid, property.getId(), property.isFavorite(), new RepositoryCallback<Void>() {
+                @Override
+                public void onSuccess(Void result) {}
+
+                @Override
+                public void onError(String errorMessage) {}
+            });
+        }
     }
 }

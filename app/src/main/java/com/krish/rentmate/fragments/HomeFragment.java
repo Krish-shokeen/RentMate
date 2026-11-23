@@ -15,24 +15,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseUser;
 import com.krish.rentmate.R;
 import com.krish.rentmate.activities.MainDashboardActivity;
 import com.krish.rentmate.activities.PropertyDetailsActivity;
 import com.krish.rentmate.adapters.PropertyAdapter;
 import com.krish.rentmate.models.Property;
-import com.krish.rentmate.utils.DemoData;
+import com.krish.rentmate.repositories.AuthRepository;
+import com.krish.rentmate.repositories.PropertyRepository;
+import com.krish.rentmate.repositories.RepositoryCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements PropertyAdapter.OnPropertyClickListener {
 
     private PropertyAdapter propertyAdapter;
+    private TextView tvGreeting;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        tvGreeting = view.findViewById(R.id.tvGreeting);
         MaterialCardView cvSearchBar = view.findViewById(R.id.cvSearchBar);
         MaterialCardView catApartments = view.findViewById(R.id.catApartments);
         MaterialCardView catPGs = view.findViewById(R.id.catPGs);
@@ -46,9 +52,11 @@ public class HomeFragment extends Fragment implements PropertyAdapter.OnProperty
         RecyclerView rvFeaturedProperties = view.findViewById(R.id.rvFeaturedProperties);
         rvFeaturedProperties.setLayoutManager(new LinearLayoutManager(getContext()));
         
-        List<Property> featuredProperties = DemoData.getProperties().subList(0, 3);
-        propertyAdapter = new PropertyAdapter(featuredProperties, this);
+        propertyAdapter = new PropertyAdapter(new ArrayList<>(), this);
         rvFeaturedProperties.setAdapter(propertyAdapter);
+
+        loadGreeting();
+        loadFeaturedProperties();
 
         // Navigation handlers
         View.OnClickListener goToExplore = v -> {
@@ -79,6 +87,30 @@ public class HomeFragment extends Fragment implements PropertyAdapter.OnProperty
         return view;
     }
 
+    private void loadGreeting() {
+        FirebaseUser user = AuthRepository.getInstance().getCurrentUser();
+        if (user != null && user.getDisplayName() != null && !user.getDisplayName().isEmpty()) {
+            tvGreeting.setText("Good morning, " + user.getDisplayName());
+        } else {
+            tvGreeting.setText("Good morning, Krish");
+        }
+    }
+
+    private void loadFeaturedProperties() {
+        PropertyRepository.getInstance().getProperties(new RepositoryCallback<List<Property>>() {
+            @Override
+            public void onSuccess(List<Property> result) {
+                if (result != null && !result.isEmpty()) {
+                    List<Property> featured = result.subList(0, Math.min(result.size(), 3));
+                    propertyAdapter.updateList(featured);
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {}
+        });
+    }
+
     @Override
     public void onPropertyClick(Property property) {
         Intent intent = new Intent(getActivity(), PropertyDetailsActivity.class);
@@ -88,6 +120,15 @@ public class HomeFragment extends Fragment implements PropertyAdapter.OnProperty
 
     @Override
     public void onFavoriteClick(Property property, int position) {
-        // Updated locally in adapter
+        if (AuthRepository.getInstance().isUserAuthenticated()) {
+            String uid = AuthRepository.getInstance().getCurrentUser().getUid();
+            PropertyRepository.getInstance().toggleFavorite(uid, property.getId(), property.isFavorite(), new RepositoryCallback<Void>() {
+                @Override
+                public void onSuccess(Void result) {}
+
+                @Override
+                public void onError(String errorMessage) {}
+            });
+        }
     }
 }

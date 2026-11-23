@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.krish.rentmate.R;
+import com.krish.rentmate.repositories.AuthRepository;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -20,13 +21,19 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Apply fade-in animation to the logo container
+        // Apply fade-in animation
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         findViewById(R.id.logoContainer).startAnimation(fadeIn);
 
-        // Navigate to MainActivity after a short delay
+        // Check authentication state
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            Intent intent;
+            if (AuthRepository.getInstance().isUserAuthenticated()) {
+                intent = new Intent(SplashActivity.this, MainDashboardActivity.class);
+            } else {
+                intent = new Intent(SplashActivity.this, MainActivity.class);
+            }
+            startActivity(intent);
             finish();
         }, 2000);
     }
