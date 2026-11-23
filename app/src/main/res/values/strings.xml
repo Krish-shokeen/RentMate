@@ -16,6 +16,7 @@
     <string name="welcome_description">Find a place you love, meet people you\'ll vibe with, and make shared living easier.</string>
     <string name="get_started">Get Started</string>
     <string name="already_have_account">I already have an account</string>
+    <string name="continue_as_guest">Explore Demo / Guest</string>
     <string name="welcome_footer">Made for better shared living.</string>
 
     <!-- Auth / Login Screen -->
@@ -60,6 +61,13 @@
     <string name="find_roommates_desc">Connect with compatible students</string>
     <string name="manage_expenses">Manage Expenses</string>
     <string name="manage_expenses_desc">Split bills and track payments</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_roommates">Roommates</string>
+    <string name="nav_expenses">Expenses</string>
+    <string name="nav_profile">Profile</string>
 
     <!-- Content Descriptions -->
     <string name="cd_search">Search</string>

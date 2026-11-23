@@ -26,6 +26,26 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".activities.MainDashboardActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".activities.PropertyDetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".activities.RoommateDetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".activities.AddExpenseActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

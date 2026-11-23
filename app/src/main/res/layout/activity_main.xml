@@ -101,7 +101,7 @@
                 app:layout_constraintBottom_toTopOf="@id/btnLogin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="12dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
@@ -109,10 +109,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/already_have_account"
+                app:layout_constraintBottom_toTopOf="@id/btnGuest"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/btnGuest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/continue_as_guest"
+                android:textColor="@color/primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:padding="8dp"
                 app:layout_constraintBottom_toTopOf="@id/tvFooter"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="16dp" />
 
             <TextView
                 android:id="@+id/tvFooter"
